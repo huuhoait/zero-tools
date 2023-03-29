@@ -22,7 +22,6 @@ require (
 	github.com/nicksnyder/go-i18n/v2 v2.2.1
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.2
-	github.com/suyuan32/simple-admin-common v0.2.9
 	github.com/zeromicro/go-zero v1.5.0
 	golang.org/x/crypto v0.7.0
 	golang.org/x/text v0.8.0
@@ -127,4 +126,5 @@ require (
 
 //replace github.com/suyuan32/simple-admin-tools v0.2.9 => github.com/huuhoait/zero-tools v0.0.1
 replace github.com/suyuan32/simple-admin-common v0.2.9 => github.com/huuhoait/zero-tools v0.0.1
+
 //replace github.com/suyuan32/simple-admin-tools v1.5.0 => github.com/suyuan32/simple-admin-tools v0.2.9
