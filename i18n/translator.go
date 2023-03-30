@@ -115,7 +115,7 @@ func (l *Translator) MatchLocalizer(lang string) *i18n.Localizer {
 		}
 	}
 
-	return l.localizer[language.Chinese]
+	return l.localizer[language.English]
 }
 
 // NewTranslator returns a translator by FS.
