@@ -117,6 +117,7 @@ func (l *Translator) MatchLocalizer(lang string) *i18n.Localizer {
 			return val
 		}
 	}
+	fmt.Println("*****************localizer:" + lang)
 
 	return l.localizer[language.English]
 }
