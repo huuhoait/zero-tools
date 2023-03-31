@@ -1,9 +1,8 @@
 module github.com/huuhoait/zero-tools
 
-go 1.19
+go 1.20
 
 require (
-    github.com/huuhoait/zero-tools v0.0.7
 	ariga.io/entcache v0.1.1-0.20220825100256-1b8bbeb21c75
 	entgo.io/ent v0.11.10
 	github.com/apache/rocketmq-client-go/v2 v2.1.1
@@ -23,7 +22,7 @@ require (
 	github.com/nicksnyder/go-i18n/v2 v2.2.1
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.2
-	github.com/zeromicro/go-zero v1.5.0
+github.com/suyuan32/simple-admin-tools v0.2.9
 	golang.org/x/crypto v0.7.0
 	golang.org/x/text v0.8.0
 	google.golang.org/grpc v1.54.0
@@ -31,6 +30,7 @@ require (
 	gorm.io/driver/mysql v1.4.7
 	gorm.io/driver/postgres v1.5.0
 	gorm.io/gorm v1.24.7-0.20230306060331-85eaf9eeda11
+	
 )
 
 require (
@@ -129,4 +129,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/zeromicro/go-zero v1.5.0 => github.com/suyuan32/simple-admin-tools v0.2.9
+//ßßreplace github.com/zeromicro/go-zero v1.5.0 => github.com/suyuan32/simple-admin-tools v0.2.9
