@@ -23,11 +23,11 @@ import (
 	"strings"
 
 	"github.com/nicksnyder/go-i18n/v2/i18n"
-	"github.com/zeromicro/go-zero/core/errorx"
 	"github.com/zeromicro/go-zero/core/logx"
 	"golang.org/x/text/language"
 	"google.golang.org/grpc/status"
 
+	"github.com/huuhoait/zero-tools/i18n/errorx"
 	"github.com/huuhoait/zero-tools/utils/errcode"
 	"github.com/huuhoait/zero-tools/utils/parse"
 )
