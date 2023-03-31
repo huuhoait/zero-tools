@@ -64,12 +64,12 @@ func (l *Translator) NewTranslator() {
 	l.localizer = make(map[language.Tag]*i18n.Localizer)
 	l.localizer[language.Chinese] = i18n.NewLocalizer(l.bundle, language.Chinese.String())
 	l.localizer[language.English] = i18n.NewLocalizer(l.bundle, language.English.String())
-	l.localizer[language.English] = i18n.NewLocalizer(l.bundle, language.Vietnamese.String())
+	l.localizer[language.Vietnamese] = i18n.NewLocalizer(l.bundle, language.Vietnamese.String())
 }
 
 // Trans used to translate any i18n string.
 func (l *Translator) Trans(ctx context.Context, msgId string) string {
-	fmt.Println("*****************lang1:" + ctx.Value("lang").(string))
+	
 	message, err := l.MatchLocalizer(ctx.Value("lang").(string)).LocalizeMessage(&i18n.Message{ID: msgId})
 	if err != nil {
 		return msgId
@@ -110,15 +110,14 @@ func (l *Translator) TransError(ctx context.Context, err error) error {
 
 // MatchLocalizer used to matcher the localizer in map
 func (l *Translator) MatchLocalizer(lang string) *i18n.Localizer {
-	fmt.Println("*****************lang:" + lang)
+	\
 	tags := parse.ParseTags(lang)
 	for _, v := range tags {
 		if val, ok := l.localizer[v]; ok {
 			return val
 		}
 	}
-	fmt.Println("*****************localizer:" + lang)
-
+	
 	return l.localizer[language.English]
 }
 
