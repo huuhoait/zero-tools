@@ -26,7 +26,7 @@ func TestTranslator(t *testing.T) {
 	l := &Translator{}
 	l.NewBundle(LocaleFS)
 	l.NewTranslator()
-	res := l.Trans(context.WithValue(context.Background(), "lang", "zh"), "common.success")
+	res := l.Trans(context.WithValue(context.Background(), "lang", ""), "common.success")
 	fmt.Println(res)
-	assert.Equal(t, "成功1", res)
+	assert.Equal(t, "成功", res)
 }
