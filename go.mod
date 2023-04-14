@@ -1,4 +1,4 @@
-module github.com/suyuan32/simple-admin-common
+module github.com/huuhoait/zero-tools
 
 go 1.20
 
