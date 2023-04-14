@@ -18,7 +18,6 @@ import (
 	"context"
 	"embed"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -110,7 +109,7 @@ func (l *Translator) TransError(ctx context.Context, err error) error {
 
 // MatchLocalizer used to matcher the localizer in map
 func (l *Translator) MatchLocalizer(lang string) *i18n.Localizer {
-	
+
 	tags := parse.ParseTags(lang)
 	for _, v := range tags {
 		if val, ok := l.localizer[v]; ok {
