@@ -22,13 +22,14 @@ import (
 	"github.com/casbin/casbin/v2/persist"
 	entadapter "github.com/casbin/ent-adapter"
 	rediswatcher "github.com/casbin/redis-watcher/v2"
-	redis2 "github.com/go-redis/redis/v8"
+	redis2 "github.com/redis/go-redis/v9"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 )
 
+// CasbinConf is the configuration structure for Casbin
 type CasbinConf struct {
-	ModelText string `json:"ModelText,optional"`
+	ModelText string `json:"ModelText,optional,env=CASBIN_MODEL_TEXT"`
 }
 
 // NewCasbin returns Casbin enforcer.

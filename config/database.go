@@ -17,9 +17,10 @@ package config
 import (
 	"database/sql"
 	"fmt"
-	"github.com/pkg/errors"
 	"os"
 	"time"
+
+	"github.com/pkg/errors"
 
 	"ariga.io/entcache"
 	entsql "entgo.io/ent/dialect/sql"
@@ -33,17 +34,19 @@ import (
 
 // DatabaseConf stores database configurations.
 type DatabaseConf struct {
-	Host         string
-	Port         int
-	Username     string `json:",default=root"`
-	Password     string `json:",optional"`
-	DBName       string `json:",default=simple_admin"`
-	SSLMode      string `json:",optional"`
-	Type         string `json:",default=mysql,options=[mysql,postgres,sqlite3]"`
-	MaxOpenConns int    `json:",optional,default=100"`
-	Debug        bool   `json:",optional,default=false"`
-	CacheTime    int    `json:",optional,default=10"`
-	DBPath       string `json:",optional"`
+	Host         string `json:",env=DATABASE_HOST"`
+	Port         int    `json:",env=DATABASE_PORT"`
+	Username     string `json:",default=root,env=DATABASE_USERNAME"`
+	Password     string `json:",optional,env=DATABASE_PASSWORD"`
+	DBName       string `json:",default=simple_admin,env=DATABASE_DBNAME"`
+	SSLMode      string `json:",optional,env=DATABASE_SSL_MODE"`
+	Type         string `json:",default=mysql,options=[mysql,postgres,sqlite3],env=DATABASE_TYPE"`
+	MaxOpenConn  int    `json:",optional,default=100,env=DATABASE_MAX_OPEN_CONN"`
+	CacheTime    int    `json:",optional,default=10,env=DATABASE_CACHE_TIME"`
+	DBPath       string `json:",optional,env=DATABASE_DBPATH"`
+	MysqlConfig  string `json:",optional,env=DATABASE_MYSQL_CONFIG"`
+	PGConfig     string `json:",optional,env=DATABASE_PG_CONFIG"`
+	SqliteConfig string `json:",optional,env=DATABASE_SQLITE_CONFIG"`
 }
 
 // NewCacheDriver returns an Ent driver with cache.
@@ -51,7 +54,7 @@ func (c DatabaseConf) NewCacheDriver(redisConf redis2.RedisConf) *entcache.Drive
 	db, err := sql.Open(c.Type, c.GetDSN())
 	logx.Must(err)
 
-	db.SetMaxOpenConns(c.MaxOpenConns)
+	db.SetMaxOpenConns(c.MaxOpenConn)
 	driver := entsql.OpenDB(c.Type, db)
 
 	rdb := redis.NewClient(&redis.Options{Addr: redisConf.Host})
@@ -73,7 +76,7 @@ func (c DatabaseConf) NewNoCacheDriver() *entsql.Driver {
 	db, err := sql.Open(c.Type, c.GetDSN())
 	logx.Must(err)
 
-	db.SetMaxOpenConns(c.MaxOpenConns)
+	db.SetMaxOpenConns(c.MaxOpenConn)
 	driver := entsql.OpenDB(c.Type, db)
 
 	return driver
@@ -81,12 +84,13 @@ func (c DatabaseConf) NewNoCacheDriver() *entsql.Driver {
 
 // MysqlDSN returns mysql DSN.
 func (c DatabaseConf) MysqlDSN() string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=True", c.Username, c.Password, c.Host, c.Port, c.DBName)
+	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=True%s", c.Username, c.Password, c.Host, c.Port, c.DBName, c.MysqlConfig)
 }
 
 // PostgresDSN returns Postgres DSN.
 func (c DatabaseConf) PostgresDSN() string {
-	return fmt.Sprintf("postgresql://%s:%s@%s:%d/%s?sslmode=%s", c.Username, c.Password, c.Host, c.Port, c.DBName, c.SSLMode)
+	return fmt.Sprintf("postgresql://%s:%s@%s:%d/%s?sslmode=%s%s", c.Username, c.Password, c.Host, c.Port, c.DBName,
+		c.SSLMode, c.PGConfig)
 }
 
 // SqliteDSN returns Sqlite DSN.
@@ -109,7 +113,7 @@ func (c DatabaseConf) SqliteDSN() string {
 		}
 	}
 
-	return fmt.Sprintf("file:%s?_busy_timeout=100000&_fk=1", c.DBPath)
+	return fmt.Sprintf("file:%s?_busy_timeout=100000&_fk=1%s", c.DBPath, c.SqliteConfig)
 }
 
 // GetDSN returns DSN according to the database type.

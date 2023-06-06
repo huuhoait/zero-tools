@@ -19,16 +19,18 @@ import (
 	"embed"
 	"encoding/json"
 	"net/http"
+	"path/filepath"
 	"strings"
 
 	"github.com/huuhoait/zero-tools/utils/errcode"
 	"github.com/huuhoait/zero-tools/utils/parse"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
+	"github.com/zeromicro/go-zero/core/errorx"
 	"github.com/zeromicro/go-zero/core/logx"
 	"golang.org/x/text/language"
 	"google.golang.org/grpc/status"
 
-	"github.com/zeromicro/go-zero/core/errorx"
+
 )
 
 //go:embed locale/*.json
@@ -43,13 +45,25 @@ type Translator struct {
 
 // NewBundle returns a bundle from FS.
 func (l *Translator) NewBundle(file embed.FS) {
-	bundle := i18n.NewBundle(language.English)
+	bundle := i18n.NewBundle(language.Chinese)
 	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
 	_, err := bundle.LoadMessageFileFS(file, "locale/zh.json")
 	logx.Must(err)
 	_, err = bundle.LoadMessageFileFS(file, "locale/en.json")
 	logx.Must(err)
-	_, err = bundle.LoadMessageFileFS(file, "locale/vi.json")
+
+	l.bundle = bundle
+}
+
+// NewBundleFromFile returns a bundle from a directory which contains i18n files.
+func (l *Translator) NewBundleFromFile(conf Conf) {
+	bundle := i18n.NewBundle(language.English)
+	filePath, err := filepath.Abs(conf.Dir)
+	logx.Must(err)
+	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
+	_, err = bundle.LoadMessageFile(filepath.Join(filePath, "locale/zh.json"))
+	logx.Must(err)
+	_, err = bundle.LoadMessageFile(filepath.Join(filePath, "locale/en.json"))
 	logx.Must(err)
 
 	l.bundle = bundle
@@ -124,6 +138,14 @@ func (l *Translator) MatchLocalizer(lang string) *i18n.Localizer {
 func NewTranslator(file embed.FS) *Translator {
 	trans := &Translator{}
 	trans.NewBundle(file)
+	trans.NewTranslator()
+	return trans
+}
+
+// NewTranslatorFromFile returns a translator by FS.
+func NewTranslatorFromFile(conf Conf) *Translator {
+	trans := &Translator{}
+	trans.NewBundleFromFile(conf)
 	trans.NewTranslator()
 	return trans
 }
